@@ -15,6 +15,7 @@ requirement to follow.
 | 3 | Vedic and Western chart dashboards | [phase-3-chart-dashboards.md](phases/phase-3-chart-dashboards.md) |
 | 4 | Interpretations, reports, and methodology | [phase-4-interpretations-reports.md](phases/phase-4-interpretations-reports.md) |
 | 5 | Quality, accessibility, and handoff | [phase-5-quality-handoff.md](phases/phase-5-quality-handoff.md) |
+| 6 | Encrypted profile and resumable conversations | [phase-6-encrypted-memory-and-conversations.md](phases/phase-6-encrypted-memory-and-conversations.md) |
 
 ## Operating sequence
 
@@ -29,6 +30,11 @@ requirement to follow.
 6. Run the existing, relevant checks and report exact commands and outcomes.
 7. Complete the [phase closeout](../.github/skills/astrava-project/templates/phase-closeout.md)
    and stop for approval before moving to another phase.
+
+Phase 6 changes the prototype's previous no-persistence boundary only for
+explicitly saved vault data. It requires the user-approved self-hosted
+TypeScript API and PostgreSQL; phase specs must not imply that chart fixtures or
+interpretations are real.
 
 ## Phase gates
 

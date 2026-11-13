@@ -231,12 +231,20 @@ export default function HomePage() {
               eyebrow="A personal report, in context"
               title="Questions worth exploring."
             />
-            <a
-              className="inline-flex min-h-11 items-center gap-2 self-start rounded-lg text-sm font-semibold text-ink underline decoration-champagne underline-offset-4 hover:text-[#765522] sm:self-auto"
-              href="#sample-preview"
-            >
-              See a sample layout <ArrowRight aria-hidden="true" size={16} />
-            </a>
+            <div className="flex flex-col gap-2">
+              <a
+                className="inline-flex min-h-11 items-center gap-2 self-start rounded-lg text-sm font-semibold text-ink underline decoration-champagne underline-offset-4 hover:text-[#765522]"
+                href="#sample-preview"
+              >
+                See a sample layout <ArrowRight aria-hidden="true" size={16} />
+              </a>
+              <Link
+                className="inline-flex min-h-11 items-center gap-2 self-start rounded-lg text-sm font-semibold text-ink underline decoration-champagne underline-offset-4 hover:text-[#765522]"
+                to="/explore"
+              >
+                Ask a question and return later <ArrowRight aria-hidden="true" size={16} />
+              </Link>
+            </div>
           </div>
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {reportTopics.map((topic) => (
@@ -249,6 +257,12 @@ export default function HomePage() {
               </Card>
             ))}
           </div>
+          <Link
+            className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-lg text-sm font-semibold text-ink underline decoration-champagne underline-offset-4 hover:text-[#765522]"
+            to="/reports"
+          >
+            Browse report previews <ArrowRight aria-hidden="true" size={16} />
+          </Link>
         </section>
 
         <section className="bg-midnight text-ivory" id="sample-preview">
@@ -298,7 +312,11 @@ export default function HomePage() {
                   {['Planetary placements', 'Chart summary', 'Interpretation'].map((item) => (
                     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4" key={item}>
                       <p className="text-sm font-medium text-ivory/80">{item}</p>
-                      <p className="mt-1 text-xs text-ivory/50">Available in a later phase</p>
+                      <p className="mt-1 text-xs text-ivory/50">
+                        {item === 'Interpretation'
+                          ? 'Fixture-backed sample preview available'
+                          : 'Available in a later phase'}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -318,7 +336,8 @@ export default function HomePage() {
               ASTRAVA is designed so that chart calculations remain separate
               from the language used to explain them. Settings will be visible,
               and interpretations will point back to the placements they draw
-              on. No chart engine is connected in this prototype.
+              on.               No real chart calculation is connected; current dashboards use
+              clearly labelled sample fixtures.
             </p>
           </div>
           <div className="grid gap-3 self-center">
@@ -343,8 +362,9 @@ export default function HomePage() {
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#765522]">A note on the prototype</p>
               <h2 className="mt-3 font-display text-2xl text-midnight">What can I do here today?</h2>
               <p className="mt-3 text-sm leading-6 text-ink/75">
-                Explore the product approach and design preview. Birth details,
-                chart calculations, and personal interpretations are not
+                Explore the product approach, enter birth details for a
+                clearly labelled sample flow, and save questions to revisit.
+                Verified chart calculations and personalized readings are not
                 available yet.
               </p>
             </div>
@@ -352,9 +372,11 @@ export default function HomePage() {
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#765522]">Privacy by design</p>
               <h2 className="mt-3 font-display text-2xl text-midnight">Your details stay yours.</h2>
               <p className="mt-3 text-sm leading-6 text-ink/75">
-                This prototype does not ask for or store birth details. If a
-                future phase introduces a form, its data use will be explained
-                before collection.
+                The sample flow keeps unsaved birth details in memory. If you
+                opt in to an account, your browser encrypts birth details and
+                saved questions before sending them to the self-hosted API.
+                Keep your recovery key safe; it is needed if you forget your
+                vault passphrase.
               </p>
             </div>
           </div>

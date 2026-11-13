@@ -21,15 +21,25 @@ overridden by a phase spec.
 
 ## Privacy, security, and service constraints
 
-- Do not log or persist real birth details. Do not put secrets in frontend code.
-- The prototype uses mock fixtures and has no authentication or database.
+- Never log real birth details, account passwords, recovery proofs, or vault
+  payloads. Do not put server secrets in frontend code.
+- The prototype's sample flow remains ephemeral. Persist real birth details or
+  conversation history only after explicit user consent, as browser-encrypted
+  vault ciphertext in the self-hosted PostgreSQL service.
+- The API must never receive plaintext birth details, conversation content,
+  passphrases, or raw recovery keys. Keep encryption keys in memory only; use a
+  user-controlled passphrase and a generated recovery key, with clear loss and
+  recovery consequences.
+- Use authenticated, owner-scoped API access, secure session handling, rate
+  limits for authentication/recovery, and TLS in deployment. Provide usable
+  inspection and deletion controls before claiming those controls exist.
 - Do not introduce paid APIs or services. Ask before choosing a free external
   geocoding/timezone source if it creates a material privacy, licensing, or
   availability trade-off.
 - Do not add a real ephemeris/calculation dependency without first presenting
   licence, accuracy, and commercial-use implications and receiving approval.
-- Do not claim deletion, retention, or privacy controls exist until they are
-  implemented.
+- Do not claim end-to-end encryption, deletion, retention, or privacy
+  controls exist until they are implemented and verified.
 
 ## UX and accessibility
 

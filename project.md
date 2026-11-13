@@ -60,11 +60,11 @@ All calculation settings (ayanamsha, house system, node type, orbs) must be expl
 Use this unless you have a strong reason to propose otherwise (state the reason first).
 
 - **Frontend:** React, TypeScript (strict, no `any`), Vite, React Router, Tailwind CSS, Lucide icons, Recharts where appropriate
-- **Backend (later):** Node.js, TypeScript, Express or a clearly separated service layer
-- **Database (later):** PostgreSQL via Supabase. The MVP needs no database; use mock fixtures
+- **Backend:** self-hosted Node.js and TypeScript API
+- **Database:** self-hosted PostgreSQL for account metadata and encrypted vault ciphertext
 - **Validation:** Zod
 - **Testing:** Vitest, React Testing Library; Playwright for key journeys later
-- **Hosting:** GitHub + Vercel Hobby. Keep deployment config separate from app logic
+- **Hosting:** GitHub + Vercel Hobby for the frontend; self-host the TypeScript API and PostgreSQL separately. Keep deployment config separate from app logic
 
 No paid APIs or services in the initial build.
 
@@ -94,7 +94,7 @@ Premium, editorial, celestial. Intelligent, calm, sophisticated, trustworthy.
 3. **Help me choose.** On the system selection step, include a short "Not sure which to pick?" explainer comparing Vedic and Western in two or three lines each. The user still makes the explicit choice; never default silently.
 4. **Honest about uncertainty.** Birth time matters. Never assume one. If unknown, offer a clearly labelled mode (for example, Sun, Moon sign and planets only, with no Ascendant or houses) and explain why.
 5. **Balanced tone.** Non-deterministic, reflective language ("tends to", "may"). No guaranteed predictions about marriage, health, wealth or career. Include a clear note that content is for self-reflection and entertainment, not professional, medical, legal or financial advice.
-6. **Privacy visible.** Short, human privacy notes next to the birth-details form: what is used, that nothing is stored in the prototype, and that deletion controls are planned.
+6. **Privacy visible.** Explain what is encrypted, what the self-hosted service can access, how account and vault recovery work, and how to inspect or delete saved data.
 7. **No dead ends.** Every empty, loading and error state explains what happened and what to do next.
 8. **Mock data is always obvious.** Show a persistent "Sample data, not your real chart" badge wherever mock content appears. Never present mock output as a real chart.
 
@@ -103,7 +103,7 @@ Premium, editorial, celestial. Intelligent, calm, sophisticated, trustworthy.
 ## 7. Pages
 
 ### `/` Homepage
-1. Navigation: ASTRAVA logo, Explore Astrology, Vedic Astrology, Western Astrology, How It Works, Sign In (placeholder), "Explore My Chart" CTA
+1. Navigation: ASTRAVA logo, an Explore menu grouping Explore Astrology, Vedic Astrology, Western Astrology, How It Works, and Explore Your Chart, followed by Interpretations, Reports, Methodology, Sign In, and the "Explore My Chart" CTA. Keep the desktop header compact; collapse to the complete Menu disclosure below the desktop breakpoint.
 2. Hero
    - Headline: "Your chart holds a story. Let's understand it."
    - Sub: "Explore the patterns, possibilities and planetary influences in your birth chart through personalised astrology intelligence."
@@ -120,11 +120,14 @@ Fields: full name (optional), date of birth, exact time of birth, birth city, co
 - Validate date and time; give inline, accessible error messages
 - Unknown birth time: clear warning that Ascendant and houses may be inaccurate, plus the reduced mode described above
 - City and country: use a free source (local dataset or free geocoding) and capture the IANA timezone. Flag historical timezone and DST handling as a known requirement for real calculations
-- Collect only what is needed. Persist nothing sensitive
+- Collect only what is needed. Keep unsaved form values ephemeral; persist saved birth details only as client-encrypted vault data.
 
 ### `/chart` Chart dashboard
 Show: selected system, Sun sign, Moon sign, Ascendant, planetary placements, house placements, Nakshatra (Vedic), aspects, element and modality breakdown (Western), and a chart diagram with a screen-reader-friendly text summary.
 Components: PlanetaryPlacementTable, BirthChartDiagram, PlanetarySummary, HouseDistribution, KeyChartInsights. Mock data only for now, clearly labelled.
+
+### `/explore` Explore Your Chart
+Offer guided topics and free-text questions in a persistent conversation. Users can return to prior conversations after signing in and unlocking their encrypted vault. Keep the current implementation clearly labelled as a sample conversation until verified chart calculations and an approved interpretation service exist.
 
 ### `/interpretation` Personalised interpretation
 Sections: personality blueprint, emotional patterns, communication style, strengths and challenges, career tendencies, relationship patterns, areas for self-development. Show how each interpretation was derived (which placements it drew on).
@@ -145,10 +148,11 @@ Keep calculation logic fully independent of React.
 src/
   app/            App.tsx, router.tsx
   components/     common, layout, navigation, forms, charts, reports, dashboard
-  pages/          HomePage, BirthDetailsPage, ChartPage, InterpretationPage, ReportsPage, MethodologyPage
-  features/       birth-details, vedic, western, interpretations, reports
+  pages/          HomePage, BirthDetailsPage, ChartPage, AccountPage, ConversationPage, InterpretationPage, ReportsPage, MethodologyPage
+  features/       birth-details, vault, vedic, western, interpretations, reports
   astrology/      types, calculations, validators, adapters, fixtures
   services/       chartService.ts, interpretationService.ts
+  server/         TypeScript API, PostgreSQL migrations
   hooks/  lib/  styles/  utils/  tests/
 ```
 
@@ -180,9 +184,12 @@ Shared strict types: `BirthDetails`, `AstrologySystem`, `CalculationSettings`, `
 
 **Privacy by design**
 - No secrets in frontend code; use environment variables for future integrations
-- Never log real birth details
-- Use mock data in development; design future deletion and retention controls
-- No authentication until it is genuinely needed
+- Never log real birth details, account passwords, recovery proofs, or vault payloads
+- Use mock chart data in development; provide working inspection and deletion controls for saved vault data
+- Encrypt birth details and conversation history in the browser before any network request; the API stores ciphertext only
+- Keep the vault encryption key in memory only. Use a user-chosen vault passphrase and a generated recovery key; explain that losing both makes the vault unrecoverable
+- Use authenticated, owner-scoped API access; store password hashes and hashed session tokens, never plaintext vault content
+- Require TLS in deployment and rate-limit authentication and recovery endpoints
 
 **Accessibility**
 - Semantic HTML, full keyboard navigation, visible focus, labelled inputs, appropriate ARIA
@@ -202,6 +209,7 @@ Work one milestone at a time.
 | 3 | Separate Vedic and Western dashboards, reusable chart components, placement tables |
 | 4 | Interpretation preview, reports page, methodology page |
 | 5 | Tests, accessibility fixes, responsive fixes, README and setup docs |
+| 6 | Optional encrypted birth profile, account recovery, and resumable chart conversations |
 
 Phase acceptance criteria and execution guidance: see [`specs/README.md`](specs/README.md)
 and the reusable workflow at [`.github/skills/astrava-project/SKILL.md`](.github/skills/astrava-project/SKILL.md).

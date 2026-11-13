@@ -1,14 +1,22 @@
-import { ArrowUpRight, Orbit } from 'lucide-react'
+import { ArrowUpRight, ChevronDown, Orbit } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { Badge } from '../common/Badge'
 import { buttonStyles } from '../common/Button'
 
-const navLinks = [
-  { href: '#methodology', label: 'Explore astrology' },
-  { href: '#vedic', label: 'Vedic' },
-  { href: '#western', label: 'Western' },
-  { href: '#how-it-works', label: 'How it works' },
+const exploreLinks: Array<{ href: string; label: string; route?: boolean }> = [
+  { href: '/#methodology', label: 'Explore astrology' },
+  { href: '/#vedic', label: 'Vedic' },
+  { href: '/#western', label: 'Western' },
+  { href: '/#how-it-works', label: 'How it works' },
+  { href: '/explore', label: 'Explore your chart', route: true },
 ]
+
+const navLinks: Array<{ href: string; label: string; route: boolean }> = [
+  { href: '/interpretation', label: 'Interpretations', route: true },
+  { href: '/reports', label: 'Reports', route: true },
+  { href: '/methodology', label: 'Methodology', route: true },
+]
+
+const mobileNavLinks = [...exploreLinks, ...navLinks]
 
 export function Navigation() {
   return (
@@ -25,25 +33,56 @@ export function Navigation() {
           <span className="font-display text-2xl tracking-[0.12em]">ASTRAVA</span>
         </Link>
 
-        <nav aria-label="Main navigation" className="hidden items-center gap-6 lg:flex">
+        <nav aria-label="Main navigation" className="hidden items-center gap-6 xl:flex">
+          <details className="group relative">
+            <summary className="flex cursor-pointer list-none items-center gap-1 rounded-sm text-sm text-ivory/75 transition-colors hover:text-ivory focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-champagne">
+              Explore
+              <ChevronDown
+                aria-hidden="true"
+                className="transition-transform group-open:rotate-180"
+                size={14}
+              />
+            </summary>
+            <div className="absolute left-0 top-8 flex w-56 flex-col gap-1 rounded-2xl border border-white/15 bg-midnight p-2 shadow-2xl">
+              {exploreLinks.map((link) => (
+                link.route ? (
+                  <Link
+                    className="rounded-xl px-3 py-2 text-sm text-ivory/85 hover:bg-white/10"
+                    key={link.href}
+                    to={link.href}
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    className="rounded-xl px-3 py-2 text-sm text-ivory/85 hover:bg-white/10"
+                    href={link.href}
+                    key={link.href}
+                  >
+                    {link.label}
+                  </a>
+                )
+              ))}
+            </div>
+          </details>
           {navLinks.map((link) => (
-            <a
+            <Link
               className="rounded-sm text-sm text-ivory/75 transition-colors hover:text-ivory"
-              href={link.href}
               key={link.href}
+              to={link.href}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
-          <span
-            aria-label="Sign in, coming soon"
-            className="inline-flex items-center gap-2 text-sm text-ivory/65"
+          <Link
+            className="inline-flex items-center gap-2 text-sm text-ivory/75 hover:text-ivory"
+            to="/account"
           >
-            Sign in <Badge className="px-2 py-0.5 text-[10px]" tone="dark">Soon</Badge>
-          </span>
+            Sign in
+          </Link>
         </nav>
 
-        <div className="hidden shrink-0 items-center gap-4 lg:flex">
+        <div className="hidden shrink-0 items-center gap-4 xl:flex">
           <Link
             className={`${buttonStyles.primary} inline-flex min-h-10 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors`}
             to="/birth-details"
@@ -52,7 +91,7 @@ export function Navigation() {
           </Link>
         </div>
 
-        <details className="group relative lg:hidden">
+        <details className="group relative xl:hidden">
           <summary className="grid min-h-11 min-w-11 cursor-pointer list-none place-items-center rounded-full border border-white/25 text-sm font-medium text-ivory focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-champagne">
             <span className="group-open:hidden">Menu</span>
             <span className="hidden group-open:inline">Close</span>
@@ -61,18 +100,31 @@ export function Navigation() {
             aria-label="Mobile navigation"
             className="absolute right-0 top-14 flex w-[min(88vw,22rem)] flex-col gap-1 rounded-2xl border border-white/15 bg-midnight p-3 shadow-2xl"
           >
-            {navLinks.map((link) => (
-              <a
-                className="rounded-xl px-4 py-3 text-sm text-ivory/85 hover:bg-white/10"
-                href={link.href}
-                key={link.href}
-              >
-                {link.label}
-              </a>
+            {mobileNavLinks.map((link) => (
+              link.route ? (
+                <Link
+                  className="rounded-xl px-4 py-3 text-sm text-ivory/85 hover:bg-white/10"
+                  key={link.href}
+                  to={link.href}
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  className="rounded-xl px-4 py-3 text-sm text-ivory/85 hover:bg-white/10"
+                  href={link.href}
+                  key={link.href}
+                >
+                  {link.label}
+                </a>
+              )
             ))}
-            <span className="flex items-center justify-between px-4 py-3 text-sm text-ivory/65">
-              Sign in <Badge className="px-2 py-0.5 text-[10px]" tone="dark">Soon</Badge>
-            </span>
+            <Link
+              className="rounded-xl px-4 py-3 text-sm text-ivory/85 hover:bg-white/10"
+              to="/account"
+            >
+              Sign in
+            </Link>
             <Link
               className={`${buttonStyles.primary} mt-2 inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold`}
               to="/birth-details"

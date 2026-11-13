@@ -18,13 +18,16 @@ mock results.
 - Capture an IANA timezone from an approved free/local source. Before choosing
   an external source, surface material privacy, licence, and availability
   trade-offs for user decision.
-- Connect form output to mock data only. Mark sample output clearly and persist
-  no real birth details.
+- Connect the sample path to mock data only. Mark sample output clearly.
+- Allow users to explicitly choose the encrypted account-save path defined in
+  [Phase 6](phase-6-encrypted-memory-and-conversations.md); otherwise keep form
+  values in memory and clear them after the sample preview.
 
 ## Out of scope
 
-Real chart calculations, database or server persistence, authentication, and
-paid geocoding/timezone services.
+Real chart calculations and paid geocoding/timezone services. Account creation,
+encrypted persistence, and conversation history are specified and implemented
+only in Phase 6.
 
 ## Acceptance criteria
 
@@ -36,7 +39,8 @@ paid geocoding/timezone services.
   house results as certain.
 - The chosen timezone is represented explicitly. Historical timezone/DST
   limitations are documented rather than hidden.
-- Birth data is not logged or persisted, and all mock data remains visibly
+- Unsaved birth data is not logged or persisted; when the user explicitly saves,
+  only client-encrypted vault ciphertext is sent. All mock data remains visibly
   identified as sample data.
 - Relevant existing checks pass and the form is usable by keyboard at mobile
   and desktop widths.
